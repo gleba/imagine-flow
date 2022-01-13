@@ -11,10 +11,14 @@ import (
 
 func StartWebs() {
 	fs := http.FileServer(http.Dir(vars.PublicImagesFolder))
-	//http.Handle("/ori/", http.StripPrefix("/ori/", fs))
-	http.Handle("/", fs)
+	if vars.URL_PREFIX != "" && vars.URL_PREFIX != "/" {
+		fxURL := "/" + vars.URL_PREFIX + "/"
+		http.Handle(fxURL, http.StripPrefix(fxURL, fs))
+	} else {
+		http.Handle("/", fs)
+	}
 	http.HandleFunc("/sync/", syncHandler)
-	http.HandleFunc("/re", resizeHandler)
+	http.HandleFunc(vars.URL_PREFIX+"/re", resizeHandler)
 	fmt.Println("imagine started at", vars.PORT, "port")
 	err := http.ListenAndServe(":"+vars.PORT, nil)
 	if err != nil {
@@ -33,7 +37,7 @@ func write(w http.ResponseWriter, code int, bytes []byte) {
 
 func syncHandler(w http.ResponseWriter, r *http.Request) {
 	parts := strings.Split(r.URL.Path, "/")
-	file := strings.Join(parts[2:], "/")
+	file := strings.Join(parts[3:], "/")
 	imageCache.Drop(file)
 	write(w, 200, []byte(file))
 }
