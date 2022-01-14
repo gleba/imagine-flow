@@ -4,8 +4,9 @@ RUN apk add musl-dev vips-dev gcc
 
 WORKDIR /src
 COPY . .
-RUN go build -o /bin/app /src/main.go
-
+ARG APP_VER=local
+RUN go build -ldflags "-X imagine-flow/vars.Version=$APP_VER" -o /bin/app /src/main.go
+#
 FROM alpine:3.14
 RUN apk add vips-dev
 COPY --from=builder /bin/app /app

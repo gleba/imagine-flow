@@ -2,7 +2,7 @@ package vars
 
 import "os"
 
-var PublicImagesFolder = getEnv("PUBLIC_IMAGES_FOLDER", "../images") // "/Users/g.panteleev/Pictures"
+var PublicImagesFolder = getEnv("PUBLIC_IMAGES_FOLDER", "/imagine") // "/Users/g.panteleev/Pictures"
 var AliveTime = getEnv("ALIVE_TIME", "24h")
 var URL_PREFIX = getEnv("URL_PREFIX", "i")
 var PORT = getEnv("PORT", "5555")
